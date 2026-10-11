@@ -1,0 +1,120 @@
+:root {
+  --void-dark: #07080B;
+  --stone-dark: #0D0F14;
+  --stone-plate: #13161F;
+  --stone-border: #222735;
+  --stone-border-hover: rgba(201, 169, 98, 0.4);
+  
+  --gold-primary: #C9A962;
+  --gold-light: #DFBE76;
+  --gold-dark: #8C6F32;
+  --gold-glow: rgba(201, 169, 98, 0.22);
+  
+  --ash-light: #ECE8DF;
+  --ash-muted: #9BA1AD;
+  --crimson-seal: #8B1E1E;
+  
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--void-dark);
+  color: var(--ash-light);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  /* Ink cross-hatch etching texture overlay */
+  background-image: 
+    radial-gradient(circle at 50% 5%, rgba(201, 169, 98, 0.08) 0%, transparent 55%),
+    radial-gradient(circle at 10% 40%, rgba(13, 15, 20, 0.9) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.35' stroke-opacity='0.035'%3E%3Cpath d='M0 60L60 0M0 30L30 0M30 60L60 30M0 45L45 0M15 60L60 15M0 15L15 0M45 60L60 45'/%3E%3Cpath d='M0 0L60 60M0 30L30 60M30 0L60 30' stroke-opacity='0.02'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+/* Typography Helpers */
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+.font-ui { font-family: var(--font-ui); }
+
+/* Atmospheric Stone Plate Bento Card */
+.stone-card {
+  background: linear-gradient(180deg, rgba(19, 22, 31, 0.92) 0%, rgba(13, 15, 20, 0.97) 100%);
+  border: 1px solid var(--stone-border);
+  border-radius: 26px;
+  box-shadow: 
+    0 18px 50px -12px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(201, 169, 98, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.stone-card:hover {
+  border-color: var(--stone-border-hover);
+  box-shadow: 
+    0 22px 60px -12px rgba(0, 0, 0, 0.95),
+    0 0 25px -4px var(--gold-glow),
+    inset 0 1px 0 rgba(201, 169, 98, 0.25);
+}
+
+/* Interactive Pill Control */
+.pill-control {
+  border-radius: 999px;
+  background: rgba(13, 15, 20, 0.8);
+  border: 1px solid var(--stone-border);
+  color: var(--ash-light);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-control:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.pill-active {
+  background: rgba(201, 169, 98, 0.15);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+
+/* Squircle Anchor */
+.squircle-badge {
+  border-radius: 16px;
+  background: rgba(19, 22, 31, 0.85);
+  border: 1px solid var(--stone-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Astrolabe Rotations */
+@keyframes spinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spinCounterClockwise {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.orbit-slow { animation: spinClockwise 45s linear infinite; }
+.orbit-counter { animation: spinCounterClockwise 65s linear infinite; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--void-dark); }
+::-webkit-scrollbar-thumb { background: var(--stone-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }

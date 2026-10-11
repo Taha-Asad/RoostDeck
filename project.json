@@ -1,0 +1,43 @@
+{
+  "$schema": "../PROJECT_SCHEMA.md",
+  "projectId": "roost-deck",
+  "name": "The Roost Command Deck — Sovereign Gamified Life Engine & Decoupled Cross-Platform Ecosystem",
+  "type": "dual-edition (sovereign-tool & commercial-prototype)",
+  "status": "active-development",
+  "methodology": "Feature-Driven Development (FDD) & Contract-First Living Documentation",
+  "teamStructure": {
+    "productOwner": "Taha Asadullah (The Foolish Crow)",
+    "backendAndTesting": "Alexander Cross / Antigravity (Rust, Core State Engines, FS/DB Storage, Automated Tests, IPC Contracts)",
+    "frontendAndUX": "Design & UI Collaborator (React 19, Tailwind CSS, Component Ergonomics)"
+  },
+  "editions": {
+    "sanctumSovereign": {
+      "target": "Personal, Studio & Friends (The Roost)",
+      "storage": "Native POSIX Filesystem & Obsidian Vault Markdown Interoperability",
+      "network": "Private Peer-to-Peer / Guild Tavern with E2EE and Chess Study Breaks"
+    },
+    "commercialPrototype": {
+      "target": "Product Showcase & Commercial Prototype",
+      "storage": "Decoupled Storage Adapter (Sandbox / Cloud / Mockable)",
+      "network": "Configurable Tenant & Showcase Profiles"
+    }
+  },
+  "paths": {
+    "root": "projects/RoostDeck",
+    "docs": "projects/RoostDeck/docs",
+    "requirements": "projects/RoostDeck/requirements",
+    "packages": "projects/RoostDeck/packages",
+    "apps": "projects/RoostDeck/apps"
+  },
+  "stack": {
+    "primaryLanguage": "Rust",
+    "secondaryLanguages": ["TypeScript"],
+    "backend": ["Rust (Tauri 2 Core)", "Node.js (Core Packages)"],
+    "frontend": ["React 19", "Tailwind CSS", "Vite"],
+    "database": ["SQLite (rusqlite / sqlx)", "Local Markdown Vault"],
+    "networking": ["WebSockets", "AES-256-GCM / X3DH"],
+    "testing": ["cargo test", "node --test", "vitest"]
+  },
+  "activePhase": "Phase 3: Implementation & Core Engineering (Gate 3: DoCC)",
+  "activeMilestone": "FEAT-01 Complete (10/10 tests green); Moving to FEAT-02 Focus Altar Backend"
+}
