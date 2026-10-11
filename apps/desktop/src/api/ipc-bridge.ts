@@ -1,8 +1,18 @@
 import { NoteCreateDTO, FileInfo } from '@roost/fs-engine';
 import { generateNoteContent } from '@roost/fs-engine';
+import {
+  FocusCompletionResult,
+  FocusDuration,
+  FocusSessionState,
+  RealmType,
+  calculateAttributeBoost,
+  calculateFocusXpReward,
+  calculateManaCost,
+} from '@roost/core-gamify';
 
 // Check if running inside Tauri runtime
 const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+
 
 export async function createNoteNative(dto: NoteCreateDTO): Promise<FileInfo> {
   const { fullContent, metadata } = generateNoteContent(dto);
@@ -106,3 +116,199 @@ export async function fetchRecentNotes(): Promise<FileInfo[]> {
     },
   ];
 }
+
+// ---------------------------------------------------------------------------
+// FEAT-02: Focus Altar & Void Mana IPC Bridge
+// ---------------------------------------------------------------------------
+
+let mockActiveSession: FocusSessionState | null = null;
+
+export async function startFocusSessionNative(
+  durationMinutes: FocusDuration,
+  realm: RealmType,
+  label: string,
+  ambientSoundscape?: 'void_drone' | 'celestial_rain' | 'deep_binaural' | 'none'
+): Promise<FocusSessionState> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState>('start_focus_session', {
+        durationMinutes,
+        realm,
+        label,
+        ambientSoundscape: ambientSoundscape || null,
+      });
+    } catch (err) {
+      console.warn('Tauri start_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  // Browser Mock Simulation
+  const totalSeconds = durationMinutes * 60;
+  const session: FocusSessionState = {
+    id: `mock_focus_${Date.now()}`,
+    config: {
+      durationMinutes,
+      realm,
+      label,
+      ambientSoundscape,
+    },
+    status: 'active',
+    totalDurationSeconds: totalSeconds,
+    remainingSeconds: totalSeconds,
+    elapsedSeconds: 0,
+    voidManaCost: calculateManaCost(durationMinutes),
+    startedAt: new Date().toISOString(),
+  };
+
+  mockActiveSession = session;
+  return session;
+}
+
+export async function tickFocusSessionNative(elapsedDeltaSeconds: number): Promise<FocusSessionState> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState>('tick_focus_session', {
+        elapsedDeltaSeconds,
+      });
+    } catch (err) {
+      console.warn('Tauri tick_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  if (!mockActiveSession || mockActiveSession.status !== 'active') {
+    throw new Error('NO_ACTIVE_SESSION: No session is currently running.');
+  }
+
+  const newElapsed = Math.min(mockActiveSession.totalDurationSeconds, mockActiveSession.elapsedSeconds + elapsedDeltaSeconds);
+  const newRemaining = Math.max(0, mockActiveSession.totalDurationSeconds - newElapsed);
+
+  mockActiveSession = {
+    ...mockActiveSession,
+    elapsedSeconds: newElapsed,
+    remainingSeconds: newRemaining,
+  };
+
+  return mockActiveSession;
+}
+
+export async function pauseFocusSessionNative(): Promise<FocusSessionState> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState>('pause_focus_session');
+    } catch (err) {
+      console.warn('Tauri pause_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  if (!mockActiveSession || mockActiveSession.status !== 'active') {
+    throw new Error('CANNOT_PAUSE: Session is not currently active.');
+  }
+
+  mockActiveSession = {
+    ...mockActiveSession,
+    status: 'paused',
+    pausedAt: new Date().toISOString(),
+  };
+
+  return mockActiveSession;
+}
+
+export async function resumeFocusSessionNative(): Promise<FocusSessionState> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState>('resume_focus_session');
+    } catch (err) {
+      console.warn('Tauri resume_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  if (!mockActiveSession || mockActiveSession.status !== 'paused') {
+    throw new Error('CANNOT_RESUME: Session is not paused.');
+  }
+
+  mockActiveSession = {
+    ...mockActiveSession,
+    status: 'active',
+    pausedAt: undefined,
+  };
+
+  return mockActiveSession;
+}
+
+export async function completeFocusSessionNative(): Promise<FocusCompletionResult> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusCompletionResult>('complete_focus_session');
+    } catch (err) {
+      console.warn('Tauri complete_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  if (!mockActiveSession) {
+    throw new Error('NO_ACTIVE_SESSION: No session to complete.');
+  }
+
+  const completedSession: FocusSessionState = {
+    ...mockActiveSession,
+    status: 'completed',
+    remainingSeconds: 0,
+    elapsedSeconds: mockActiveSession.totalDurationSeconds,
+    completedAt: new Date().toISOString(),
+  };
+
+  const xpEarned = calculateFocusXpReward(mockActiveSession.config.durationMinutes);
+  const boost = calculateAttributeBoost(mockActiveSession.config.durationMinutes, mockActiveSession.config.realm);
+
+  mockActiveSession = null;
+
+  return {
+    session: completedSession,
+    xpEarned,
+    attributeBoost: boost,
+    manaRecharged: 5,
+    nextState: null as any,
+  };
+}
+
+export async function abandonFocusSessionNative(): Promise<FocusSessionState> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState>('abandon_focus_session');
+    } catch (err) {
+      console.warn('Tauri abandon_focus_session failed, falling back to local simulation:', err);
+    }
+  }
+
+  if (!mockActiveSession) {
+    throw new Error('NO_ACTIVE_SESSION: No session to abandon.');
+  }
+
+  const abandonedSession: FocusSessionState = {
+    ...mockActiveSession,
+    status: 'abandoned',
+    abandonedAt: new Date().toISOString(),
+  };
+
+  mockActiveSession = null;
+  return abandonedSession;
+}
+
+export async function getActiveFocusSessionNative(): Promise<FocusSessionState | null> {
+  if (isTauri) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      return await invoke<FocusSessionState | null>('get_active_focus_session');
+    } catch (err) {
+      console.warn('Tauri get_active_focus_session fallback:', err);
+    }
+  }
+
+  return mockActiveSession;
+}
+

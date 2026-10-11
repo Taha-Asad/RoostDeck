@@ -50,3 +50,39 @@ export interface GamificationState {
   habits: Habit[];
   lastUpdated: string;
 }
+
+export type FocusDuration = 25 | 50 | 90;
+export type FocusSessionStatus = 'idle' | 'active' | 'paused' | 'completed' | 'abandoned';
+
+export interface FocusSessionConfig {
+  durationMinutes: FocusDuration;
+  realm: RealmType;
+  label: string;
+  ambientSoundscape?: 'void_drone' | 'celestial_rain' | 'deep_binaural' | 'none';
+}
+
+export interface FocusSessionState {
+  id: string;
+  config: FocusSessionConfig;
+  status: FocusSessionStatus;
+  totalDurationSeconds: number;
+  remainingSeconds: number;
+  elapsedSeconds: number;
+  voidManaCost: number;
+  startedAt: string;
+  pausedAt?: string;
+  completedAt?: string;
+  abandonedAt?: string;
+}
+
+export interface FocusCompletionResult {
+  session: FocusSessionState;
+  xpEarned: number;
+  attributeBoost: {
+    attribute: 'intellect' | 'craft' | 'vitality';
+    amount: number;
+  };
+  manaRecharged: number;
+  nextState: GamificationState;
+}
+

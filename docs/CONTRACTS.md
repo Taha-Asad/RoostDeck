@@ -124,41 +124,88 @@ export type CrowRank =
 
 ---
 
-## 4. Upcoming FEAT-02 Contracts (Focus Altar & Void Mana)
+## 4. FEAT-02: Focus Altar & Void Mana Engine (Certified)
 
-*Currently under construction for backend implementation.*
+The Focus Altar backend coordinates deep flow sessions, timer synchronization, Void Mana consumption, and attribute progression.
 
-### `start_focus_session`
+### TypeScript Imports
 ```typescript
-interface StartFocusArgs {
-  durationMinutes: 25 | 50 | 90;
-  realm: 'uni' | 'work' | 'personal';
-  tag: string;
-}
-
-interface FocusSession {
-  sessionId: string;
-  startTime: string;
-  durationMinutes: number;
-  voidManaCost: number;     // e.g. 20
-  active: boolean;
-}
+import {
+  FocusDuration,           // 25 | 50 | 90
+  FocusSessionStatus,      // 'idle' | 'active' | 'paused' | 'completed' | 'abandoned'
+  FocusSessionConfig,
+  FocusSessionState,
+  FocusCompletionResult,
+  calculateManaCost,       // 25->15, 50->30, 90->50
+  calculateFocusXpReward,  // 25->50, 50->120, 90->250
+} from '@roost/core-gamify';
 ```
 
-### `complete_focus_session`
+### Tauri IPC Commands & Client Bridge Methods
+All methods are available directly from `apps/desktop/src/api/ipc-bridge.ts`:
+
+#### 1. `startFocusSessionNative`
+Starts a focus timer and deducts Void Mana from the player.
 ```typescript
-interface FocusResult {
-  sessionId: string;
-  completed: boolean;
-  durationCompletedMinutes: number;
-  xpAwarded: number;
-  attributeBoost: { attribute: string; amount: number };
-  voidManaRefundOrBurn: number;
+import { startFocusSessionNative } from '../api/ipc-bridge';
+
+// Throws error if another session is already active or if mana is insufficient
+const session = await startFocusSessionNative(25, 'uni', 'Operating Systems Paging', 'void_drone');
+console.log('Session started:', session.id, 'Remaining seconds:', session.remainingSeconds);
+```
+
+#### 2. `tickFocusSessionNative`
+Advances elapsed time and decreases remaining time. Call every second in UI `useEffect` timer.
+```typescript
+import { tickFocusSessionNative } from '../api/ipc-bridge';
+
+const updated = await tickFocusSessionNative(1); // advances by 1 second
+console.log(updated.remainingSeconds);
+```
+
+#### 3. `pauseFocusSessionNative` & `resumeFocusSessionNative`
+Pauses and resumes the active focus timer.
+```typescript
+import { pauseFocusSessionNative, resumeFocusSessionNative } from '../api/ipc-bridge';
+
+const paused = await pauseFocusSessionNative();
+const resumed = await resumeFocusSessionNative();
+```
+
+#### 4. `completeFocusSessionNative`
+Completes the session when time reaches zero (or user marks complete), awarding scaled XP, attribute boosts, and mana recovery.
+```typescript
+import { completeFocusSessionNative } from '../api/ipc-bridge';
+
+const result = await completeFocusSessionNative();
+console.log('XP Earned:', result.xpEarned);               // 50 / 120 / 250
+console.log('Attribute Boost:', result.attributeBoost);   // e.g. { attribute: 'intellect', amount: 3 }
+console.log('Mana Recharged:', result.manaRecharged);     // +5
+```
+
+#### 5. `abandonFocusSessionNative`
+Prematurely aborts the session. Spent Void Mana is **not** refunded and awards **0 XP**.
+```typescript
+import { abandonFocusSessionNative } from '../api/ipc-bridge';
+
+const abandoned = await abandonFocusSessionNative();
+```
+
+#### 6. `getActiveFocusSessionNative`
+Checks on app boot whether a session is currently running.
+```typescript
+import { getActiveFocusSessionNative } from '../api/ipc-bridge';
+
+const activeSession = await getActiveFocusSessionNative();
+if (activeSession) {
+  console.log('Restoring in-progress timer:', activeSession.remainingSeconds);
 }
 ```
 
 ---
 
 ## 5. Contract Changelog
-- **2026-10-09 (FEAT-01)**: Certified initial IPC commands (`create_markdown_note`, `list_recent_notes`) and core `@roost/core-gamify` state machine.
+- **2026-10-11 (FEAT-02 Certified)**: Completed Focus Altar and Void Mana Engine. Added 6 native Rust IPC commands, thread-safe session mutex, and browser mock bridge parity. 20/20 automated tests green.
 - **2026-10-11**: Formalized dual-edition support (Sanctum Sovereign local paths vs. Commercial Prototype decoupled mock adapter).
+- **2026-10-09 (FEAT-01 Certified)**: Initial IPC commands (`create_markdown_note`, `list_recent_notes`) and core `@roost/core-gamify` state machine.
+
