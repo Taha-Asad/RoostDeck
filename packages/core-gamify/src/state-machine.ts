@@ -68,14 +68,18 @@ export function toggleBounty(state: GamificationState, bountyId: string): Gamifi
   let updatedPlayer: PlayerStats;
   if (willBeCompleted) {
     updatedPlayer = addExperience(state.player, targetBounty.xpReward);
-    // Attribute bonuses
+    const newAttributes = { ...updatedPlayer.attributes };
     if (targetBounty.realm === 'uni') {
-      updatedPlayer.attributes.intellect += 2;
+      newAttributes.intellect += 2;
     } else if (targetBounty.realm === 'work') {
-      updatedPlayer.attributes.craft += 2;
+      newAttributes.craft += 2;
     } else {
-      updatedPlayer.attributes.vitality += 2;
+      newAttributes.vitality += 2;
     }
+    updatedPlayer = {
+      ...updatedPlayer,
+      attributes: newAttributes,
+    };
   } else {
     // If uncompleted, subtract XP gracefully
     const revertedTotalXp = Math.max(0, state.player.totalXp - targetBounty.xpReward);
@@ -117,7 +121,13 @@ export function toggleHabit(state: GamificationState, habitId: string): Gamifica
   let updatedPlayer = state.player;
   if (willBeCompleted) {
     updatedPlayer = addExperience(updatedPlayer, 15);
-    updatedPlayer.attributes.vitality += 1;
+    updatedPlayer = {
+      ...updatedPlayer,
+      attributes: {
+        ...updatedPlayer.attributes,
+        vitality: updatedPlayer.attributes.vitality + 1,
+      },
+    };
   }
 
   return {

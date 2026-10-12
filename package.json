@@ -10,6 +10,7 @@
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
+    "verify": "bash scripts/verify_milestones.sh",
     "dev": "npm run dev -w apps/desktop"
   },
   "devDependencies": {

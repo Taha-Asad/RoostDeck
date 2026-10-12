@@ -86,7 +86,7 @@ export function generateNoteContent(dto: NoteCreateDTO): { fullContent: string; 
   };
 
   const frontmatter = serializeFrontmatter(metadata);
-  const templateBody = dto.customBody || getTemplateBody(dto.title, dto.type, dto.realm);
+  const templateBody = dto.body || dto.customBody || getTemplateBody(dto.title, dto.type, dto.realm);
   const fullContent = `${frontmatter}${templateBody}\n`;
 
   return { fullContent, metadata };

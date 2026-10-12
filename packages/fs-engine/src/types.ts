@@ -26,6 +26,7 @@ export interface NoteCreateDTO {
   realm: RealmType;
   type: NoteType;
   tags?: string[];
+  body?: string;
   customBody?: string;
   targetFolder?: string;
 }

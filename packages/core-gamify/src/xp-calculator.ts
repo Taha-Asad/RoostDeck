@@ -40,6 +40,7 @@ export function addExperience(stats: PlayerStats, xpDelta: number): PlayerStats 
 
   return {
     ...stats,
+    attributes: { ...stats.attributes },
     level: newLevel,
     totalXp: newTotalXp,
     currentLevelXp: newCurrentLevelXp,
