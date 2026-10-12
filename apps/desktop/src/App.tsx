@@ -10,6 +10,7 @@ import {
 } from '@roost/core-gamify';
 import { FileInfo } from '@roost/fs-engine';
 import { HeaderDeck } from './components/HeaderDeck.tsx';
+import { FocusAltarCard } from './components/FocusAltarCard.tsx';
 import { BountiesCard } from './components/BountiesCard.tsx';
 import { DesksCard } from './components/DesksCard.tsx';
 import { HabitsCard } from './components/HabitsCard.tsx';
@@ -19,6 +20,8 @@ import { KeyboardCheatSheet } from './components/KeyboardCheatSheet.tsx';
 import { useKeyboard } from './hooks/use-keyboard.ts';
 import { createNoteNative, fetchRecentNotes } from './api/ipc-bridge.ts';
 import { playMechanicalClick, playCelestialChime, playLevelUpFanfare } from './audio/sound-fx.ts';
+import { FocusCompletionResult } from '@roost/core-gamify';
+
 
 export const App: React.FC = () => {
   // 1. Gamification State with localStorage persistence
@@ -115,7 +118,36 @@ export const App: React.FC = () => {
     setRecentFiles((prev) => [newFile, ...prev.filter((f) => f.fileName !== newFile.fileName)].slice(0, 10));
   };
 
-  // 5. Connect Hybrid Keyboard Engine
+  // 5. Focus Altar Completion Handler (FEAT-02)
+  const handleFocusCompleted = (result: FocusCompletionResult) => {
+    const prevLevel = gameState.player.level;
+    let updatedPlayer = addExperience(gameState.player, result.xpEarned);
+
+    // Apply attribute boost and mana recovery
+    const attr = result.attributeBoost.attribute;
+    updatedPlayer = {
+      ...updatedPlayer,
+      attributes: {
+        ...updatedPlayer.attributes,
+        [attr]: updatedPlayer.attributes[attr] + result.attributeBoost.amount,
+      },
+      voidMana: Math.min(updatedPlayer.maxVoidMana, updatedPlayer.voidMana + result.manaRecharged),
+    };
+
+    setGameState({
+      ...gameState,
+      player: updatedPlayer,
+      lastUpdated: new Date().toISOString(),
+    });
+
+    if (updatedPlayer.level > prevLevel) {
+      playLevelUpFanfare();
+    } else {
+      playCelestialChime();
+    }
+  };
+
+  // 6. Connect Hybrid Keyboard Engine
   useKeyboard({
     onNextItem: () => {
       setSelectedBountyIdx((prev) => (prev + 1) % gameState.bounties.length);
@@ -148,7 +180,16 @@ export const App: React.FC = () => {
       />
 
       {/* Main Bento Grid */}
-      <main className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
+        {/* FEAT-02: High-Immersion Focus Altar */}
+        <div className="md:col-span-2 lg:col-span-1">
+          <FocusAltarCard
+            currentMana={gameState.player.voidMana}
+            activeRealm={activeDesk}
+            onSessionCompleted={handleFocusCompleted}
+          />
+        </div>
+
         {/* Card 1: Today's Bounties (Dawn Rites) */}
         <BountiesCard
           bounties={gameState.bounties}
@@ -173,7 +214,9 @@ export const App: React.FC = () => {
         />
 
         {/* Card 4: Vault & Recent Files */}
-        <RecentFilesCard files={recentFiles} vaultName="TheFallenCrow" />
+        <div className="md:col-span-2 lg:col-span-2">
+          <RecentFilesCard files={recentFiles} vaultName="TheFallenCrow" />
+        </div>
       </main>
 
       {/* Footer Status Bar */}
