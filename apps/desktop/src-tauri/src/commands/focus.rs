@@ -212,6 +212,8 @@ pub fn get_active_focus_session() -> Result<Option<FocusSessionState>, String> {
 mod tests {
     use super::*;
 
+    static TEST_LOCK: Mutex<()> = Mutex::new(());
+
     fn reset_state() {
         let mut lock = ACTIVE_SESSION.lock().unwrap();
         *lock = None;
@@ -219,6 +221,7 @@ mod tests {
 
     #[test]
     fn test_focus_session_lifecycle() {
+        let _guard = TEST_LOCK.lock().unwrap();
         reset_state();
 
         // 1. Start
@@ -256,6 +259,7 @@ mod tests {
 
     #[test]
     fn test_abandon_session() {
+        let _guard = TEST_LOCK.lock().unwrap();
         reset_state();
 
         let session = start_focus_session(50, "work".to_string(), "Database Optimization".to_string(), None).unwrap();

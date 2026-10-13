@@ -33,7 +33,7 @@ export const HabitsCard: React.FC<HabitsCardProps> = ({
   onToggleSanctuary,
 }) => {
   return (
-    <section aria-labelledby="habits-heading" className="stone-card p-6 flex flex-col justify-between">
+    <section aria-labelledby="habits-heading" className="stone-card p-6 flex flex-col justify-between h-full">
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

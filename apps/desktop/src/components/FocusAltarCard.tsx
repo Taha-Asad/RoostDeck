@@ -82,7 +82,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
   return (
     <section
       aria-labelledby="focus-altar-heading"
-      className="stone-card p-6 flex flex-col justify-between relative overflow-hidden group"
+      className="stone-card p-6 flex flex-col justify-between h-full relative group"
     >
       {/* Background Decorative Radial Glow */}
       <div
@@ -226,18 +226,18 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
             </div>
 
             {/* Session Label Input */}
-            <div className="w-full max-w-sm">
+            <div className="w-full max-w-md">
               <input
                 type="text"
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Session intent (e.g. Algorithms, Refactor)..."
-                className="w-full bg-black/40 border border-stone-800 rounded-xl px-3 py-2 text-xs font-mono text-[var(--ash-light)] focus:outline-none focus:border-[var(--gold-primary)] transition"
+                className="w-full bg-black/50 border border-[var(--stone-border)] rounded-xl px-3.5 py-2.5 text-xs font-mono text-[var(--ash-light)] placeholder-[var(--ash-muted)]/60 focus:outline-none focus:border-[var(--gold-primary)] transition"
               />
             </div>
 
             {/* Soundscape & Yield Preview */}
-            <div className="flex items-center justify-between w-full max-w-sm text-xs font-mono text-[var(--ash-muted)] px-1">
+            <div className="flex items-center justify-between w-full max-w-md text-xs font-mono text-[var(--ash-muted)] px-1">
               <div className="flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-amber-400" />
                 <span className="tabular-nums">YIELD: +{xpReward} XP</span>
@@ -247,7 +247,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
                 <select
                   value={soundscape}
                   onChange={(e: any) => setSoundscape(e.target.value)}
-                  className="bg-transparent text-[var(--ash-muted)] text-xs font-mono focus:outline-none cursor-pointer"
+                  className="bg-black/40 border border-stone-800 rounded px-2 py-0.5 text-[var(--ash-muted)] text-xs font-mono focus:outline-none focus:border-[var(--gold-primary)] cursor-pointer"
                 >
                   <option value="void_drone">Void Drone</option>
                   <option value="celestial_rain">Celestial Rain</option>
@@ -262,7 +262,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
               type="button"
               onClick={handleStart}
               disabled={!hasEnoughMana}
-              className={`w-full max-w-sm py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition press-feedback ${
+              className={`w-full max-w-md py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition press-feedback ${
                 hasEnoughMana
                   ? 'bg-[var(--gold-primary)] hover:bg-[var(--gold-light)] text-black cursor-pointer shadow-md'
                   : 'bg-stone-800 text-stone-500 cursor-not-allowed border border-stone-700'
@@ -282,7 +282,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
       </div>
 
       {/* Footer Info */}
-      <footer className="border-t border-stone-800/60 pt-3 flex items-center justify-between text-[11px] font-mono text-[var(--ash-muted)] z-10">
+      <footer className="mt-4 pt-3 border-t border-[var(--stone-border)] flex items-center justify-between text-[11px] font-mono text-[var(--ash-muted)] z-10">
         <span>GATE 3 / FEAT-02 BACKEND SYNC</span>
         <span className="text-[var(--gold-light)]">IMMERSIVE SHIELD</span>
       </footer>

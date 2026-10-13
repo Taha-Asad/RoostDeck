@@ -21,28 +21,28 @@ export const BountiesCard: React.FC<BountiesCardProps> = ({
         return {
           label: 'UNI / ACADEMIC',
           attr: '+Intellect',
-          icon: <BookOpen className="w-3 h-3 text-sky-400" />,
-          colorClass: 'text-sky-300 border-sky-500/30 bg-sky-950/30',
+          icon: <BookOpen className="w-3 h-3 text-sky-400/80" />,
+          colorClass: 'text-slate-200 border-slate-700/70 bg-slate-900/60',
         };
       case 'work':
         return {
           label: 'OFFICE / CORBEL',
           attr: '+Craft',
-          icon: <Briefcase className="w-3 h-3 text-emerald-400" />,
-          colorClass: 'text-emerald-300 border-emerald-500/30 bg-emerald-950/30',
+          icon: <Briefcase className="w-3 h-3 text-emerald-400/80" />,
+          colorClass: 'text-stone-200 border-stone-700/70 bg-stone-900/60',
         };
       default:
         return {
           label: 'SANCTUM / LIFE',
           attr: '+Vitality',
-          icon: <Heart className="w-3 h-3 text-amber-400" />,
-          colorClass: 'text-amber-300 border-amber-500/30 bg-amber-950/30',
+          icon: <Heart className="w-3 h-3 text-[var(--gold-light)]" />,
+          colorClass: 'text-[var(--gold-light)] border-[var(--gold-primary)]/40 bg-[rgba(201,169,98,0.1)]',
         };
     }
   };
 
   return (
-    <div className="stone-card p-6 flex flex-col justify-between">
+    <div className="stone-card p-6 flex flex-col justify-between h-full">
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

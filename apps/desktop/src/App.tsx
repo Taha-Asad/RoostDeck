@@ -171,7 +171,7 @@ export const App: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex flex-col justify-between max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8 flex flex-col max-w-7xl mx-auto space-y-6">
       {/* Top Header Deck */}
       <HeaderDeck
         player={gameState.player}
@@ -179,48 +179,46 @@ export const App: React.FC = () => {
         onToggleCheatSheet={() => setCheatSheetOpen(true)}
       />
 
-      {/* Main Bento Grid */}
-      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
-        {/* FEAT-02: High-Immersion Focus Altar */}
-        <div className="md:col-span-2 lg:col-span-1">
-          <FocusAltarCard
-            currentMana={gameState.player.voidMana}
-            activeRealm={activeDesk}
-            onSessionCompleted={handleFocusCompleted}
+      {/* Main Bento Cockpit */}
+      <main className="space-y-6">
+        {/* Tier 1: Focus Altar Hero (7 cols) + Dawn Rites Bounties (5 cols) */}
+        <section aria-label="Hero Operations" className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div className="lg:col-span-7">
+            <FocusAltarCard
+              currentMana={gameState.player.voidMana}
+              activeRealm={activeDesk}
+              onSessionCompleted={handleFocusCompleted}
+            />
+          </div>
+          <div className="lg:col-span-5">
+            <BountiesCard
+              bounties={gameState.bounties}
+              selectedIndex={selectedBountyIdx}
+              onToggleBounty={handleToggleBounty}
+              onSelectIndex={setSelectedBountyIdx}
+            />
+          </div>
+        </section>
+
+        {/* Tier 2: The Three Desks (4 cols) + Daily Vitality (4 cols) + Vault Explorer (4 cols) */}
+        <section aria-label="Domain & Vault Workspace" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <DesksCard
+            activeDesk={activeDesk}
+            attributes={gameState.player.attributes}
+            onSelectDesk={setActiveDesk}
           />
-        </div>
-
-        {/* Card 1: Today's Bounties (Dawn Rites) */}
-        <BountiesCard
-          bounties={gameState.bounties}
-          selectedIndex={selectedBountyIdx}
-          onToggleBounty={handleToggleBounty}
-          onSelectIndex={setSelectedBountyIdx}
-        />
-
-        {/* Card 2: The Three Desks */}
-        <DesksCard
-          activeDesk={activeDesk}
-          attributes={gameState.player.attributes}
-          onSelectDesk={setActiveDesk}
-        />
-
-        {/* Card 3: Daily Vitality & Habits */}
-        <HabitsCard
-          habits={gameState.habits}
-          sanctuaryActive={gameState.player.sanctuaryActive}
-          onToggleHabit={handleToggleHabit}
-          onToggleSanctuary={handleToggleSanctuary}
-        />
-
-        {/* Card 4: Vault & Recent Files */}
-        <div className="md:col-span-2 lg:col-span-2">
+          <HabitsCard
+            habits={gameState.habits}
+            sanctuaryActive={gameState.player.sanctuaryActive}
+            onToggleHabit={handleToggleHabit}
+            onToggleSanctuary={handleToggleSanctuary}
+          />
           <RecentFilesCard
             files={recentFiles}
             vaultName="TheFallenCrow"
             onOpenQuickCapture={() => setQuickCaptureOpen(true)}
           />
-        </div>
+        </section>
       </main>
 
       {/* Footer Status Bar */}

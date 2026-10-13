@@ -31,7 +31,7 @@ export const RecentFilesCard: React.FC<RecentFilesCardProps> = ({
   onOpenQuickCapture,
 }) => {
   return (
-    <section aria-labelledby="recent-files-heading" className="stone-card p-6 flex flex-col justify-between">
+    <section aria-labelledby="recent-files-heading" className="stone-card p-6 flex flex-col justify-between h-full">
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

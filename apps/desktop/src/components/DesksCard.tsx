@@ -48,7 +48,7 @@ export const DesksCard: React.FC<DesksCardProps> = ({
       attrVal: attributes.intellect,
       shortcut: 'g u',
       icon: <BookOpen className="w-4 h-4 text-sky-400" />,
-      colorGlow: 'hover:border-sky-500/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.15)]',
+      colorGlow: 'hover:border-slate-500 hover:shadow-[0_0_15px_rgba(148,163,184,0.15)]',
     },
     {
       id: 'work',
@@ -57,8 +57,8 @@ export const DesksCard: React.FC<DesksCardProps> = ({
       attrName: 'Craft',
       attrVal: attributes.craft,
       shortcut: 'g o',
-      icon: <Briefcase className="w-4 h-4 text-emerald-400" />,
-      colorGlow: 'hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(52,211,153,0.15)]',
+      icon: <Briefcase className="w-4 h-4 text-emerald-400/80" />,
+      colorGlow: 'hover:border-stone-500 hover:shadow-[0_0_15px_rgba(168,162,158,0.15)]',
     },
     {
       id: 'personal',
@@ -68,12 +68,12 @@ export const DesksCard: React.FC<DesksCardProps> = ({
       attrVal: attributes.vitality,
       shortcut: 'g p',
       icon: <Compass className="w-4 h-4 text-[var(--gold-primary)]" />,
-      colorGlow: 'hover:border-[var(--gold-primary)] hover:shadow-[0_0_20px_var(--gold-glow)]',
+      colorGlow: 'hover:border-[var(--gold-primary)] hover:shadow-[0_0_15px_var(--gold-glow)]',
     },
   ];
 
   return (
-    <section aria-labelledby="three-desks-heading" className="stone-card p-6 flex flex-col justify-between">
+    <section aria-labelledby="three-desks-heading" className="stone-card p-6 flex flex-col justify-between h-full">
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
