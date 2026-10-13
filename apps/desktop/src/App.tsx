@@ -215,7 +215,11 @@ export const App: React.FC = () => {
 
         {/* Card 4: Vault & Recent Files */}
         <div className="md:col-span-2 lg:col-span-2">
-          <RecentFilesCard files={recentFiles} vaultName="TheFallenCrow" />
+          <RecentFilesCard
+            files={recentFiles}
+            vaultName="TheFallenCrow"
+            onOpenQuickCapture={() => setQuickCaptureOpen(true)}
+          />
         </div>
       </main>
 

@@ -129,7 +129,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
           <div className="flex flex-col items-center space-y-4 w-full">
             {/* Digital Timer Display */}
             <div className="relative flex flex-col items-center justify-center">
-              <span className="font-mono text-5xl md:text-6xl font-bold tracking-tight text-[var(--gold-light)] drop-shadow-md">
+              <span className="font-mono tabular-nums text-5xl md:text-6xl font-bold tracking-tight text-[var(--gold-light)] drop-shadow-md">
                 {timeRemainingFormatted}
               </span>
               <span className="text-xs font-mono text-[var(--ash-muted)] mt-1 tracking-wider uppercase">
@@ -151,7 +151,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] font-mono text-[var(--ash-muted)]">
+              <div className="flex justify-between text-[10px] font-mono tabular-nums text-[var(--ash-muted)]">
                 <span>{progressPercent}% COMPLETE</span>
                 <span>+{xpReward} XP UPON FINISH</span>
               </div>
@@ -161,30 +161,34 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
             <div className="flex items-center gap-3 pt-2">
               {isPaused ? (
                 <button
+                  type="button"
                   onClick={resumeSession}
-                  className="px-4 py-2 rounded-xl bg-[var(--gold-primary)] hover:bg-[var(--gold-light)] text-black font-semibold text-xs font-mono flex items-center gap-2 transition"
+                  className="px-4 py-2 rounded-xl bg-[var(--gold-primary)] hover:bg-[var(--gold-light)] text-black font-semibold text-xs font-mono flex items-center gap-2 transition press-feedback"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" /> RESUME
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={pauseSession}
-                  className="px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-[var(--ash-light)] text-xs font-mono flex items-center gap-2 transition border border-stone-700"
+                  className="px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-[var(--ash-light)] text-xs font-mono flex items-center gap-2 transition border border-stone-700 press-feedback"
                 >
                   <Pause className="w-3.5 h-3.5 fill-current" /> PAUSE
                 </button>
               )}
 
               <button
+                type="button"
                 onClick={completeSession}
-                className="px-4 py-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800/80 text-emerald-300 text-xs font-mono flex items-center gap-2 transition"
+                className="px-4 py-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800/80 text-emerald-300 text-xs font-mono flex items-center gap-2 transition press-feedback"
               >
                 <ShieldCheck className="w-3.5 h-3.5" /> COMPLETE
               </button>
 
               <button
+                type="button"
                 onClick={abandonSession}
-                className="px-3 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/40 text-rose-300 text-xs font-mono flex items-center gap-1.5 transition"
+                className="px-3 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-900/40 text-rose-300 text-xs font-mono flex items-center gap-1.5 transition press-feedback"
                 title="Abandon without XP reward"
               >
                 <Square className="w-3 h-3 fill-current" /> ABORT
@@ -202,17 +206,18 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
                 return (
                   <button
                     key={dur}
+                    type="button"
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setSelectedDuration(dur)}
-                    className={`flex-1 max-w-[100px] py-3 px-2 rounded-xl border flex flex-col items-center justify-center transition-all ${
+                    className={`flex-1 max-w-[100px] py-3 px-2 rounded-xl border flex flex-col items-center justify-center transition-all press-feedback ${
                       isSelected
-                        ? 'bg-[rgba(201,169,98,0.12)] border-[var(--gold-primary)] text-[var(--gold-light)] shadow-lg shadow-[rgba(201,169,98,0.1)]'
+                        ? 'bg-[rgba(201,169,98,0.12)] border-[var(--gold-primary)] text-[var(--gold-light)] shadow-lg shadow-[rgba(201,169,98,0.1)] ring-1 ring-[var(--gold-primary)]/40'
                         : 'bg-black/30 border-stone-800/80 text-[var(--ash-muted)] hover:border-stone-700'
                     }`}
                   >
-                    <span className="font-mono text-lg font-bold">{dur}m</span>
-                    <span className="text-[10px] font-mono text-[var(--ash-muted)] mt-0.5">
+                    <span className="font-mono tabular-nums text-lg font-bold">{dur}m</span>
+                    <span className="text-[10px] font-mono tabular-nums text-[var(--ash-muted)] mt-0.5">
                       -{cost} Mana
                     </span>
                   </button>
@@ -235,7 +240,7 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
             <div className="flex items-center justify-between w-full max-w-sm text-xs font-mono text-[var(--ash-muted)] px-1">
               <div className="flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-amber-400" />
-                <span>YIELD: +{xpReward} XP</span>
+                <span className="tabular-nums">YIELD: +{xpReward} XP</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Radio className="w-3.5 h-3.5 text-cyan-400" />
@@ -254,9 +259,10 @@ export const FocusAltarCard: React.FC<FocusAltarCardProps> = ({
 
             {/* Start Button */}
             <button
+              type="button"
               onClick={handleStart}
               disabled={!hasEnoughMana}
-              className={`w-full max-w-sm py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition ${
+              className={`w-full max-w-sm py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider flex items-center justify-center gap-2 transition press-feedback ${
                 hasEnoughMana
                   ? 'bg-[var(--gold-primary)] hover:bg-[var(--gold-light)] text-black cursor-pointer shadow-md'
                   : 'bg-stone-800 text-stone-500 cursor-not-allowed border border-stone-700'

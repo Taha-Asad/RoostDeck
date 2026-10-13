@@ -1,3 +1,17 @@
+/**
+ * @file KeyboardCheatSheet.tsx
+ * @description Tactile Keyboard Shortcuts Modal (FEAT-01).
+ * 
+ * GUIDE FOR UI/UX COLLABORATOR:
+ * -----------------------------------------------------------------------------
+ * 1. ZERO-MOUSE DESIGN:
+ *    The entire Roost Command Deck is operable from the home row without touch
+ *    or mouse inputs. This sheet provides a quick HUD reference.
+ * 2. TRIGGERS:
+ *    - Toggled via `?` key anywhere in the cockpit.
+ *    - Dismissed via `Esc` key or overlay backdrop click.
+ */
+
 import React from 'react';
 import { X, Keyboard, Command } from 'lucide-react';
 
@@ -26,7 +40,10 @@ export const KeyboardCheatSheet: React.FC<KeyboardCheatSheetProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="keyboard-cheatsheet-heading"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
@@ -36,11 +53,16 @@ export const KeyboardCheatSheet: React.FC<KeyboardCheatSheetProps> = ({
         <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--stone-border)]">
           <div className="flex items-center gap-2">
             <Keyboard className="w-4 h-4 text-[var(--gold-light)]" />
-            <h2 className="font-display text-sm tracking-wider font-bold text-[var(--ash-light)]">
+            <h2 id="keyboard-cheatsheet-heading" className="font-display text-sm tracking-wider font-bold text-[var(--ash-light)]">
               KEYBOARD SANCTUARY CHEAT-SHEET
             </h2>
           </div>
-          <button onClick={onClose} className="text-[var(--ash-muted)] hover:text-white p-1">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close shortcuts modal"
+            className="text-[var(--ash-muted)] hover:text-white p-1 rounded-lg press-feedback"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -69,3 +91,4 @@ export const KeyboardCheatSheet: React.FC<KeyboardCheatSheetProps> = ({
     </div>
   );
 };
+

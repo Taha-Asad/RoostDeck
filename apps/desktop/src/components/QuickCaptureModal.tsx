@@ -1,3 +1,21 @@
+/**
+ * @file QuickCaptureModal.tsx
+ * @description Quick Note Capture Modal (FEAT-01).
+ * 
+ * GUIDE FOR UI/UX COLLABORATOR:
+ * -----------------------------------------------------------------------------
+ * 1. RESPONSIBILITY:
+ *    Captures rapid thoughts/lectures/tasks directly into the local vault
+ *    with Obsidian-compliant YAML frontmatter.
+ * 2. KEYBOARD TRIGGERS:
+ *    - Triggered globally via `n` or `Ctrl+K`.
+ *    - `Enter` submits form.
+ *    - `Esc` closes dialog.
+ * 3. BACKEND CONTRACT:
+ *    Calls `createNoteNative` which dispatches either through Tauri Rust IPC
+ *    (in native desktop app) or local browser mock (in dev browser preview).
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { NoteType, RealmType } from '@roost/fs-engine';
 import { X, Sparkles, BookOpen, Briefcase, Compass } from 'lucide-react';
@@ -59,7 +77,13 @@ export const QuickCaptureModal: React.FC<QuickCaptureModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quick-capture-heading"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      onClick={onClose}
+    >
       <div
         className="stone-card w-full max-w-lg p-6 border-[var(--gold-primary)] shadow-[0_25px_70px_-12px_rgba(0,0,0,0.95),0_0_35px_var(--gold-glow)]"
         onClick={(e) => e.stopPropagation()}
@@ -68,13 +92,15 @@ export const QuickCaptureModal: React.FC<QuickCaptureModalProps> = ({
         <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--stone-border)]">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[var(--gold-light)]" />
-            <h2 className="font-display text-sm tracking-wider font-bold text-[var(--ash-light)]">
+            <h2 id="quick-capture-heading" className="font-display text-sm tracking-wider font-bold text-[var(--ash-light)]">
               QUICK CAPTURE NOTE
             </h2>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-[var(--ash-muted)] hover:text-white p-1 rounded-lg"
+            aria-label="Close modal"
+            className="text-[var(--ash-muted)] hover:text-white p-1 rounded-lg press-feedback"
           >
             <X className="w-4 h-4" />
           </button>
@@ -192,14 +218,14 @@ export const QuickCaptureModal: React.FC<QuickCaptureModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="pill-control px-4 py-1.5 text-xs font-mono"
+                className="pill-control px-4 py-1.5 text-xs font-mono press-feedback"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={!title.trim()}
-                className="pill-control px-5 py-1.5 text-xs font-mono bg-[rgba(201,169,98,0.2)] border-[var(--gold-primary)] text-[var(--gold-light)] hover:bg-[rgba(201,169,98,0.35)] shadow-[0_0_12px_var(--gold-glow)] disabled:opacity-40"
+                className="pill-control px-5 py-1.5 text-xs font-mono tabular-nums press-feedback bg-[rgba(201,169,98,0.2)] border-[var(--gold-primary)] text-[var(--gold-light)] hover:bg-[rgba(201,169,98,0.35)] shadow-[0_0_12px_var(--gold-glow)] disabled:opacity-40"
               >
                 Create Note (+30 XP)
               </button>

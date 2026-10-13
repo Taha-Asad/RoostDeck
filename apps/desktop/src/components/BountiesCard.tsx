@@ -90,21 +90,21 @@ export const BountiesCard: React.FC<BountiesCardProps> = ({
                 </button>
 
                 {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono border ${badge.colorClass}`}
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wider border ${badge.colorClass}`}
                     >
                       {badge.icon}
                       {badge.label}
                     </span>
-                    <span className="text-[10px] font-mono text-[var(--gold-dark)]">
+                    <span className="text-[10px] font-mono tabular-nums text-[var(--gold-dark)]">
                       +{bounty.xpReward} XP ({badge.attr})
                     </span>
                   </div>
 
                   <p
-                    className={`text-sm leading-snug transition-colors ${
+                    className={`text-sm leading-snug transition-colors text-wrap-balance ${
                       bounty.completed
                         ? 'line-through text-[var(--ash-muted)] opacity-60'
                         : 'text-[var(--ash-light)] group-hover:text-white'
@@ -120,8 +120,10 @@ export const BountiesCard: React.FC<BountiesCardProps> = ({
       </div>
 
       <div className="mt-4 pt-3 border-t border-[var(--stone-border)] flex items-center justify-between text-xs font-mono text-[var(--ash-muted)]">
-        <span>3 OF 3 DAWN RITES ACTIVE</span>
-        <span className="text-[var(--gold-light)]">100% KEYBOARD READY</span>
+        <span className="tabular-nums">
+          {bounties.filter((b) => b.completed).length} OF {bounties.length} RITES FULFILLED
+        </span>
+        <span className="text-[var(--gold-light)] tracking-wider">HOME-ROW HYBRID</span>
       </div>
     </div>
   );
