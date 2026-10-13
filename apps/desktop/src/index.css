@@ -1,3 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #07080B;
+  --color-stone-dark: #0D0F14;
+  --color-stone-plate: #13161F;
+  --color-stone-border: #222735;
+  --color-gold-primary: #C9A962;
+  --color-gold-light: #DFBE76;
+  --color-gold-dark: #8C6F32;
+  --color-ash: #ECE8DF;
+  --color-ash-light: #ECE8DF;
+  --color-ash-muted: #9BA1AD;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-ui: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
 :root {
   --void-dark: #07080B;
   --stone-dark: #0D0F14;
